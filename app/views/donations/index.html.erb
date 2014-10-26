@@ -1,0 +1,40 @@
+<div class="content">
+    <div class="container"> 
+      <div class="row"> 
+        <div class="col-lg-12">
+
+          <h1>SHOW ALL DONATION</h1>
+          <%= link_to 'New Donation', new_donation_path, class: 'pull-right' %> 
+          <br />
+          <% flash.each do |name, msg| -%>
+            <%= content_tag :div, msg, class: name %>
+          <% end -%>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>User</th>
+                <th>Campaign</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% @donations.each do |donation| %>
+                <tr>
+                  <td><%= donation.id %></td>
+                  <td><%= donation.amount %></td>
+                  <td><%= donation.date %></td>
+                  <td><%= donation.user_id %></td>
+                  <td><%= donation.campaign_id %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,40 @@
+<% provide(:title, 'Charge Money') %>
+
+<div class="content">
+    <div class="container"> 
+
+		<div class="row">	
+			<div class="col-lg-6 col-lg-offset-3">
+				<h1>Charge money</h1>
+
+					<% flash.each do |name, msg| -%>
+						<%= content_tag :div, msg, class: name %>
+					<% end -%>
+				<%= form_for(@user, :url => {:action => 'update_money'}) do |f| %>
+					<% if @user.errors.any? %>
+						<div id="error_explanation">
+							<div class="alert alert-error">
+								Ci sono degli errori:
+							</div>
+							<ul>
+								<% @user.errors.full_messages.each do |msg| %>
+									<li>* <%= msg %></li>
+								<% end %>
+							</ul>
+						</div>
+					<% end %>
+
+					<div class="form-group">
+						<%= f.label :Money %>
+						<div class="form-control"><%= current_user.money%></div>
+					</div>
+					<div class="form-group">
+						<%= f.label :Charge %>
+						<%= f.number_field :money, class: 'form-control', placeholder: 'How much do you charge?'%>
+					</div>
+					<%= f.submit "Charge your account", class: "btn btn-default" %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

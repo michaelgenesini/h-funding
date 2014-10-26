@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyText
+  date_start: 2014-03-31 09:54:17
+  date_end: 2014-03-31 09:54:17
+  type: 
+  status: false
+  collected: 1
+  goal: false
+  items: 
+  user_id: 
+
+two:
+  description: MyText
+  date_start: 2014-03-31 09:54:17
+  date_end: 2014-03-31 09:54:17
+  type: 
+  status: false
+  collected: 1
+  goal: false
+  items: 
+  user_id: 

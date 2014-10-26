@@ -1,0 +1,45 @@
+<% provide(:title, 'New Donation') %>
+<div class="content">
+    <div class="container"> 
+		<div class="row">	
+			<div class="col-lg-6 col-lg-offset-3">
+				<h1>Donate to campaign</h1>
+
+				<%= form_for(@donation, html: { class: "styled" } ) do |f| %>
+					<div class="form-group">
+						<%= f.label :Baker %>
+						<div class="form-control">
+							<%= current_user.firstname%>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<%= f.label :amount %>
+						<%= f.number_field :amount, :step => 1, class: 'form-control'%>
+					</div>
+					<div class="form-group">
+						<%= f.label :date %>
+						<div class="form-control">
+						<%=Time.now%>
+						</div>
+					</div>
+					<div class="form-group">
+					<%= f.label :Campaign %>
+
+					<% if not params[:campaign_id] %>
+						<br />
+		  				<%= select_tag 'campaign_id', options_from_collection_for_select(Campaign.all, :id, :title) %>
+		  			<% else %>
+		      			<div class="form-control">
+		      				<%= hidden_field_tag 'campaign_id', params[:campaign_id] %>
+							<%= params[:campaign_id]%>
+						</div>
+					<% end %>
+					</div>
+					<br/>
+					<%= f.submit "Submit donation", class: "btn btn-default" %>
+				<% end %>	
+			</div>
+		</div>
+	</div>
+</div>

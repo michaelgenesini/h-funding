@@ -1,0 +1,17 @@
+digraph models_diagram {
+	graph[overlap=false, splines=true]
+	"Campaign" [shape=Mrecord, label="{Campaign|id :integer\ldescription :text\ldate_start :datetime\ldate_end :datetime\lcollected :integer\lgoal :integer\luser_id :integer\lcreated_at :datetime\lupdated_at :datetime\ltitle :string\l}"]
+	"Cost" [shape=Mrecord, label="{Cost|id :integer\lname :string\lamount :integer\lcampaign_id :integer\lcreated_at :datetime\lupdated_at :datetime\l}"]
+	"Donation" [shape=Mrecord, label="{Donation|id :integer\lamount :integer\ldate :datetime\lcampaign_id :integer\luser_id :integer\lcreated_at :datetime\lupdated_at :datetime\l}"]
+	"User" [shape=Mrecord, label="{User|id :integer\lfirstname :string\llastname :string\lmail :string\lmoney :integer\lcreated_at :datetime\lupdated_at :datetime\lpassword_hash :string\lpassword_salt :string\l}"]
+	"Campaign" -> "Donation" [arrowtail=odot, arrowhead=crow, dir=both color="#8C9294"]
+	"Campaign" -> "Cost" [arrowtail=odot, arrowhead=crow, dir=both color="#78F142"]
+	"ActiveRecord::Base" -> "Campaign" [label="", arrowhead="none", arrowtail="onormal"]
+	"Cost" -> "Use" [arrowtail=odot, arrowhead=crow, dir=both color="#EE85EA"]
+	"ActiveRecord::Base" -> "Cost" [label="", arrowhead="none", arrowtail="onormal"]
+	"Donation" -> "Use" [arrowtail=odot, arrowhead=crow, dir=both color="#68AE9F"]
+	"ActiveRecord::Base" -> "Donation" [label="", arrowhead="none", arrowtail="onormal"]
+	"User" -> "Campaign" [arrowtail=odot, arrowhead=crow, dir=both color="#D19484"]
+	"User" -> "Donation" [arrowtail=odot, arrowhead=crow, dir=both color="#F492A6"]
+	"ActiveRecord::Base" -> "User" [label="", arrowhead="none", arrowtail="onormal"]
+}

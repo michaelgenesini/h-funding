@@ -1,0 +1,109 @@
+<div class="content">
+    <div class="container"> 
+      <br/>
+      <div class="row"> 
+        <div class="col-lg-12">
+      	  <% flash.each do |name, msg| -%>
+            <%= content_tag :div, msg, class: name %>
+          <% end -%>
+        </div>
+      </div>
+      <div class="row card"> 
+        <div class="col-md-2 col-xs-12" align="center">
+          <%= image_tag "default-profile.png", class: 'img-circle img-responsive'%>
+        </div>
+        <div class="col-md-4 col-xs-12" align="center">
+          <h2><%= @user.firstname%> <%= @user.lastname%></h2>
+          <h4 class="color-light-grey"><%= @user.mail%></h4>
+          <h4 class="color-light-grey">Joined <%= @user.created_at.strftime("%b")%> <%= @user.created_at.year%></h4>
+          <h4 class="color-light-grey">Backed <%= number_of_donations_for_user(@user)%> projects</h4>
+
+        </div>
+        <% if not current_user.nil? and current_user.id == params[:id].to_i%>
+          <div class="col-md-6 col-xs-12" align="center">
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <h3>Money</h3>
+                <h3 class="color-light-grey"><%= @user.money%></h3>
+                <br/>
+                <a class="btn btn-success btn-md" href="/users/<%=current_user.id%>/charge">Charge</a>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <h3>Campaigns</h3>
+                  <h3 class="color-light-grey"><%= number_of_campaigns(current_user)%></h3>
+                  <br/>
+                  <%= link_to 'New Campaign', new_campaign_path, class: 'btn btn-success btn-md'%>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <script type="text/javascript">
+        var container = document.querySelector('#container');
+        var msnry = new Masonry( container, {
+          // options
+          columnWidth: 33,
+          itemSelector: '.item'
+        });
+      </script>
+
+      <div class="row">
+      <div class="col-md-2 card" align="center">
+          <h4>Donations</h4>
+            <% @donations.each do |donation| %>
+              <div class="card-donations" width="100%;">
+                <h5><%= name_of_campaign_for_donation(donation) %></h5>
+                <p class="color-light-grey" style="font-size:0.8em;"><%= donation.created_at.to_date%> </p>
+                <p class="color-light-grey"><%= donation.amount %></p>
+              </div>
+            <% end %>
+        </div>
+
+        <div class="col-md-10">
+          <div id="container" class="js-masonry">
+              <div class="grid-sizer"></div>
+            <% @campaigns.each do |campaign| %>
+              <div class="card item" align="left">
+                <% user = User.find_by_id(campaign.user_id)%>
+                <h4><%= campaign.title %></h4>
+                <h6 class="color-light-grey">by <%= user.firstname%> <%= user.lastname%></h6>
+                <p class="color-light-grey"><%= campaign.description %></p>
+                <h4 align="center"><%= campaign_status(campaign) %></h4>
+                <hr class="divider"></hr>
+                <div class="row" align="center">
+                  <div class="col-sm-4"><h6 class="color-light-grey">Donated</h6><h3><%= amount_of_donations(campaign)%></h3></div>
+                  <div class="col-sm-4"><h6 class="color-light-grey">Founded</h6><h3><%= perc_of_complete(campaign)%>%</h3></div>
+                  <div class="col-sm-4"><h6 class="color-light-grey">Days</h6><h3><%= days_left(campaign)%></h3></div>
+                </div>
+                <br />
+                <div class="row" align="center">
+                  <div class="col-sm-12">
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <%= perc_of_complete(campaign)%>%;">
+                        <span class="sr-only"><%= perc_of_complete(campaign)%> Complete</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% if not current_user.nil?%>
+                  <div class="row" align="center">
+                    <div class="col-sm-12">
+                      <%= link_to 'Show', campaign %>
+                      <%= link_to 'Edit', edit_campaign_path(campaign) %>
+                      <%= link_to 'Destroy', campaign, method: :delete, data: { confirm: 'Are you sure?' } %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+
+        </div>
+      </div>
+    
+
+    </div>
+</div>

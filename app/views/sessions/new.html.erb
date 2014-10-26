@@ -1,0 +1,32 @@
+<% provide(:title, "Signin") %>
+
+<div class="content">
+    <div class="container"> 
+
+      <div class="row">
+
+        <div class="col-lg-4 col-lg-offset-4">
+          <h1>Signin</h1>
+            <% flash.each do |name, msg| -%>
+              <%= content_tag :div, msg, class: name %>
+            <% end -%>
+          <%= form_for(:session, url: sessions_path, html: { class: "styled" }  ) do |f| %>
+            <div class="form-group">
+              <%= f.label:email %>
+              <%= f.text_field :mail, class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <%= f.label :password %>
+              <%= f.password_field :password, class: "form-control" %>
+            </div>
+
+            <%= f.submit "Sign in", class: "btn btn-default" %>
+          <% end %>
+          <br />
+          <p>Nuovo utente? <%= link_to "Registrati ora!", signup_path %></p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

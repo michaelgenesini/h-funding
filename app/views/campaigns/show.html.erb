@@ -1,0 +1,214 @@
+<div class="content">
+    <div class="container">       
+      <br />
+      <div class="row"> 
+        <div class="col-lg-12">
+          <% flash.each do |name, msg| -%>
+            <%= content_tag :div, msg, class: name %>
+          <% end -%>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-sm-12" align="center">
+          <h2><%= @campaign.title %></h2>
+          <h4 class="color-light-grey">Created by <%= campaign_owner_name(@campaign) %></h4>
+          <br />
+        </div>
+        <div class="row" align="center">
+          <div class="col-xs-10 col-xs-offset-1">
+            <div class="progress">
+              <div class="progress-bar <%if perc_of_complete(@campaign) > 100 %>progress-bar-success<%end%>" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <%= perc_of_complete(@campaign)%>%;">
+                <span class="sr-only"><%= perc_of_complete(@campaign)%> Complete</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="card">
+          <div class="row">
+            <div class="col-sm-6 col-xs-12" align="center">
+              <div class="col-xs-12" align="center">
+                <%= image_tag "default-project.png", class: 'img-thumbnail img-responsive'%>
+                <br />
+                <h2>Description</h2>
+                <p class="color-light-grey"><%= @campaign.description %></p>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-4"><h3>Start</h3><h4 class="color-light-grey"><%= @campaign.date_start %></h4></div>
+                <div class="col-xs-4"><h3>End</h3><h4 class="color-light-grey"><%= @campaign.date_end %></h4></div>
+                <div class="col-xs-4"><h3>Status</h3><h4 class="color-light-grey"><%= campaign_status(@campaign)%></h4></div>
+                <div class="col-xs-12" align="center">
+                <br />
+                <% if signed_in? %>
+                  <% @donation = Donation.new %>
+                  <%= link_to 'Donate', new_campaign_donation_path(@campaign, @donation), campaign_id: @campaign.id, class: 'btn btn-success btn-lg'%>
+                <% end %>
+              </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-xs-12" align="center">
+              <div class="row">
+                <div class="col-xs-4"><h3>Donated</h3><h2 class="color-light-grey"><%= amount_of_donations(@campaign) %></h2></div>
+                <div class="col-xs-4"><h3>Used</h3><h2 class="color-light-grey"><%= amount_of_costs(@campaign)%></h2></div>
+                <div class="col-xs-4"><h3>Goal</h3><h2 class="color-light-grey"><%= @campaign.goal %></h2></div>
+                
+                <div class="col-xs-4"><h3>Founded</h3><h2 class="color-light-grey"><%= perc_of_complete(@campaign)%> %</h2></div>
+                <div class="col-xs-4"><h3>Days</h3><h2 class="color-light-grey"><%= days_left(@campaign)%></h2></div>
+                <div class="col-xs-4"><h3>Bakers</h3><h2 class="color-light-grey"><%#= number_of_donations(@campaign)%></h2></div>
+                
+              </div>
+              <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" align="center">
+                <br />
+                <% if signed_in? and (@campaign.user_id == current_user.id) %>
+
+                <h2>Costs</h2>
+
+                <% @cost = Cost.new %>
+                <%= form_for(@cost) do |f| %>
+                  <% if @cost.errors.any? %>
+                    <div id="error_explanation">
+                      <h2><%= pluralize(@cost.errors.count, "error") %> prohibited this campaign from being saved:</h2>
+                      <ul>
+                        <% @cost.errors.full_messages.each do |msg| %>
+                          <li><%= msg %></li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  <% end %>
+
+                  <% @cost.campaign_id=@campaign.id %>
+
+                  <div class="form-group">
+                    <%= f.label :description %><br>
+                    <%= f.text_field :name ,class: 'form-control'%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label :amount %><br>
+                    <%= f.number_field :amount ,class: 'form-control'%>
+                  </div>
+                  <%= f.hidden_field :campaign_id %>
+                  <%= f.submit 'Submit cost', :class => 'btn btn-lg btn-success'%>
+                <% end %>
+              <% end %>
+              </div>
+              </div>
+            </div>
+          </div>
+          <br/>
+        </div>
+
+        <%# if Campaign.number_of_donations(@campaign) > 0 %>
+        <% if 1 > 0 %>
+
+        <div class="card">
+          
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+
+          google.load("visualization", "1", {packages:["corechart"]});
+
+          google.setOnLoadCallback(_gtimer());
+
+          function _gtimer () {
+            setTimeout((function() {
+              drawChart();
+            }), 500);
+            
+          }
+          
+          function drawChart() {
+
+            var data = new google.visualization.DataTable();
+
+            data.addColumn('string', 'Date'); // Implicit domain label col.
+            data.addColumn('number', 'Donations'); // Implicit series 1 data col.
+            data.addColumn({type:'string', role:'annotation'}); // annotation role col.
+            data.addColumn('number', 'Costs'); // Implicit series 1 data col.
+            data.addColumn({type:'string', role:'annotation'}); // annotationText col.
+
+            data.addRows(<%= raw get_data_for_areachart(@campaign)%>);
+
+            var options = {title: 'Campaign donations'};
+
+            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+          }
+        </script>
+
+
+          <div class="row">
+            <div class="col-sm-12 hidden-sm" align="center">
+
+              <div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+            </div>
+          </div>
+
+        </div>
+
+        
+        <div class="card">
+          <div class="row">
+            <div class="col-xs-12">
+              <h2>Donations:</h2>
+              <table class="table table-hover table-responsive">
+                <thead>
+                  <tr>
+                    <th>Baker:</th>
+                    <th>Amount:</th>
+                    <th>Date:</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                    <% @campaign.donations.each do |donation| %>
+                      <tr>
+                        <td><%= donation_owner_name(donation) %></td>
+                        <td><%= donation.amount %></td>
+                        <td><%= donation.date %></td>
+                      </tr>
+                    <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <% if Campaign.number_of_costs(@campaign) > 0 %>
+
+        <div class="card">
+          <div class="row">
+            <div class="col-xs-12">
+              <h2>Costs:</h2>
+              <table class="table table-hover table-responsive">
+                <thead>
+                  <tr>
+                    <th>Title:</th>
+                    <th>Amount:</th> 
+                    <th>Date:</th>      
+                  </tr>
+                </thead>
+                <tbody>
+                    <% @campaign.costs.each do |cost| %>
+                      <p>
+                      <tr>
+                        <td><%= cost.name %></td>
+                        <td><%= cost.amount %></td>
+                        <td><%= cost.created_at %></td>
+                      </tr>
+                      </p>
+                    <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+  </div>
+</div>
+

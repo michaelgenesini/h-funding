@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 1
+  date: 2014-03-31 09:58:17
+  campaign_id: 
+  user_id: 
+
+two:
+  amount: 1
+  date: 2014-03-31 09:58:17
+  campaign_id: 
+  user_id: 
